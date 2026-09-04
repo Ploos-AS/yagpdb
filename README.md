@@ -15,4 +15,6 @@ Required Discord redirect URIs:
 
 Persistent state is stored in PostgreSQL, Valkey, and the soundboard volume. The YAGPDB container runs as UID/GID 1000.
 
+CI builds and smoke-tests the image before publishing the `edge` channel from `main`.
+
 Packaging and upstream YAGPDB are MIT licensed. See `NOTICE`.
