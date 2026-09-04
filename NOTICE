@@ -1,0 +1,15 @@
+YAGPDB container packaging
+
+Copyright (c) 2026 Ploos AS.
+
+Packaging and container integration in this repository are licensed under MIT.
+
+Upstream YAGPDB:
+https://github.com/botlabs-gg/yagpdb
+Pinned release: v2.83.1
+Pinned commit: 7d2a3ba8975a4d0b30c814ada06ca43a969d7348
+
+Upstream YAGPDB is licensed under the MIT License.
+Copyright (c) 2019 jonas747 and contributors.
+
+Ploos AS is not affiliated with or endorsed by botlabs-gg or Discord Inc.
