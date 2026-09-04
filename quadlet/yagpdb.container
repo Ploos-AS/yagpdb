@@ -1,0 +1,23 @@
+[Unit]
+Description=YAGPDB container
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=ghcr.io/ploos-as/yagpdb:0.1.0
+ContainerName=yagpdb
+EnvironmentFile=%h/.config/yagpdb/yagpdb.env
+Volume=%h/.local/share/yagpdb/soundboard:/data/soundboard:Z
+PublishPort=127.0.0.1:5000:5000
+DropCapability=all
+NoNewPrivileges=true
+Exec=-all -pa -https=false -exthttps=true
+
+[Service]
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=300
+TimeoutStopSec=30
+
+[Install]
+WantedBy=default.target
