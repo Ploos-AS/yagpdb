@@ -1,0 +1,58 @@
+services:
+  yagpdb:
+    image: ghcr.io/ploos-as/yagpdb:0.1.0
+    env_file:
+      - .env
+    environment:
+      YAGPDB_PQHOST: postgres
+      YAGPDB_PQUSERNAME: ${POSTGRES_USER:-yagpdb}
+      YAGPDB_PQPASSWORD: ${POSTGRES_PASSWORD}
+      YAGPDB_PQDB: ${POSTGRES_DB:-yagpdb}
+      YAGPDB_REDIS: valkey:6379
+    command: ["-all", "-pa", "-https=false", "-exthttps=true"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    volumes:
+      - soundboard-data:/data/soundboard
+    ports:
+      - "127.0.0.1:5000:5000"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-yagpdb}
+      POSTGRES_USER: ${POSTGRES_USER:-yagpdb}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-yagpdb} -d ${POSTGRES_DB:-yagpdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    command: ["valkey-server", "--appendonly", "yes"]
+    volumes:
+      - valkey-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  valkey-data:
+  soundboard-data:
